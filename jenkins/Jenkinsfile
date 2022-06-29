@@ -1,45 +1,50 @@
 pipeline {
+    // Define o agent como none porque não vou trabalhar dessa vez com agente global, ou seja, um agente que vai executar
+    // todo o meu pipeline. Ao invés disso, eu vou trabalhar com agentes específicos, ou seja, stage vai definir o seu agente específico.
     agent none
     stages {
         stage('Build') {
+            // Define o agente que vai executar o estágio de build. Nesse caso, o docker, que vai fazer o pull da minha imagem.
+            // Esse agente somente vai existir enquando esse stage estiver sendo executado.
             agent {
                 docker {
                     image 'python:2-alpine'
                 }
             }
+            // Define os passos
             steps {
                 sh 'python -m py_compile sources/add2vals.py sources/calc.py'
             }
         }
-        stage('Test') {
-            agent {
-                docker {
-                    image 'qnib/pytest'
-                }
-            }
-            steps {
-                sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
-            }
-            post {
-                always {
-                    junit 'test-reports/results.xml'
-                }
-            }
-        }
-        stage('Deliver') {
-            agent {
-                docker {
-                    image 'cdrx/pyinstaller-linux:python2'
-                }
-            }
-            steps {
-                sh 'pyinstaller --onefile sources/add2vals.py'
-            }
-            post {
-                success {
-                    archiveArtifacts 'dist/add2vals'
-                }
-            }
-        }
+//         stage('Test') {
+//             agent {
+//                 docker {
+//                     image 'qnib/pytest'
+//                 }
+//             }
+//             steps {
+//                 sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
+//             }
+//             post {
+//                 always {
+//                     junit 'test-reports/results.xml'
+//                 }
+//             }
+//         }
+//         stage('Deliver') {
+//             agent {
+//                 docker {
+//                     image 'cdrx/pyinstaller-linux:python2'
+//                 }
+//             }
+//             steps {
+//                 sh 'pyinstaller --onefile sources/add2vals.py'
+//             }
+//             post {
+//                 success {
+//                     archiveArtifacts 'dist/add2vals'
+//                 }
+//             }
+//         }
     }
 }
