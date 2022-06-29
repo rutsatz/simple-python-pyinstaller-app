@@ -2,6 +2,9 @@ pipeline {
     // Define o agent como none porque não vou trabalhar dessa vez com agente global, ou seja, um agente que vai executar
     // todo o meu pipeline. Ao invés disso, eu vou trabalhar com agentes específicos, ou seja, stage vai definir o seu agente específico.
     agent none
+    
+    // Habilita também o Dockerfile. Dessa forma, a imagem é construída primeiro usando o Dockerfile do repositório.
+    // agent { dockerfile true }
     stages {
         stage('Build') {
             // Define o agente que vai executar o estágio de build. Nesse caso, o docker, que vai fazer o pull da minha imagem.
