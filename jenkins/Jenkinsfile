@@ -30,8 +30,15 @@ pipeline {
                 // test-reports/results.xml salva o relatório nessa pasta dentro do workspace
                 sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
             }
+            // Executa uma ação após terminar o passo acima. A diretiva post tem 4 status:
+            // always - Sempre executa a ação após terminar os steps.
+            // success - somente executa se o step anterior terminar com sucesso.
+            // failure - somente executa se o step anterior terminar com falha.
+            // unstable - somente executa se o step anterior estiver unstable (as vezes passa, as vezes não)
+            // Em resumo: Após terminar os steps, sempre exiba o resultado do arquivo xml gerado no step acima.
             post {
                 always {
+                    // expõe o resultado na interface do jenkins
                     junit 'test-reports/results.xml'
                 }
             }
